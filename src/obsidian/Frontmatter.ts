@@ -11,9 +11,9 @@ function _getFrontmatterKey(
 	file: TFile,
 	key: FrontmatterKey,
 	app: App
-): string {
+): string | undefined {
 	const fmCache = app.metadataCache.getFileCache(file)?.frontmatter;
-	return fmCache?.[keyTypetoFrontmatterKey[key]] || undefined;
+	return fmCache?.[keyTypetoFrontmatterKey[key]] ?? undefined;
 }
 
 function _setFrontmatterKey(
