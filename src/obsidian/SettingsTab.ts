@@ -13,10 +13,10 @@ import { DEFAULT_SETTINGS } from "./PluginSettings";
 export default class SettingsTab extends PluginSettingTab {
 	plugin: NoteSharingPlugin;
 
-	private selfHostSettings: HTMLElement;
-	private frontmatterSettings: HTMLElement;
-	private hideSelfHosted: boolean;
-	private selfHostedUrl: TextComponent;
+	private selfHostSettings!: HTMLElement;
+	private frontmatterSettings!: HTMLElement;
+	private hideSelfHosted!: boolean;
+	private selfHostedUrl!: TextComponent;
 
 	constructor(app: App, plugin: NoteSharingPlugin) {
 		super(app, plugin);
@@ -151,8 +151,8 @@ export default class SettingsTab extends PluginSettingTab {
 			)
 			.addMomentFormat((text) =>
 				text
-					.setDefaultFormat(DEFAULT_SETTINGS.frontmatterDateFormat)
-					.setValue(this.plugin.settings.frontmatterDateFormat)
+					.setDefaultFormat(DEFAULT_SETTINGS.frontmatterDateFormat!)
+					.setValue(this.plugin.settings.frontmatterDateFormat!)
 					.onChange(async (value) => {
 						this.plugin.settings.frontmatterDateFormat = value;
 						await this.plugin.saveSettings();

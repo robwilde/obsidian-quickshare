@@ -7,7 +7,7 @@ import {
 
 export class LocalStorageCache extends AbstractCache {
 	private _app: App;
-	private _cache: CacheObject;
+	private _cache!: CacheObject;
 
 	constructor(app: App) {
 		super();

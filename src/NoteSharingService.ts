@@ -20,7 +20,7 @@ type Response = {
 };
 
 export class NoteSharingService {
-	private _url: string;
+	private _url!: string;
 	private _userId: string;
 	private _pluginVersion: string;
 

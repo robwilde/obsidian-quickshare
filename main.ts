@@ -22,16 +22,16 @@ import { QuickShareSideView } from "src/ui/QuickShareSideView";
 import { writable } from "svelte/store";
 import { setActiveMdFile } from "src/lib/stores/ActiveMdFile";
 
-const { subscribe, set: setPluginStore } = writable<NoteSharingPlugin>(null);
+const { subscribe, set: setPluginStore } = writable<NoteSharingPlugin | null>(null);
 
 export const PluginStore = { subscribe };
 
 export default class NoteSharingPlugin extends Plugin {
-	public settings: PluginSettings;
-	private noteSharingService: NoteSharingService;
-	private cache: QuickShareCache;
+	public settings!: PluginSettings;
+	private noteSharingService!: NoteSharingService;
+	private cache!: QuickShareCache;
 
-	private fileMenuEvent: EventRef;
+	private fileMenuEvent!: EventRef;
 
 	async onload() {
 		setPluginStore(this);
@@ -85,7 +85,7 @@ export default class NoteSharingPlugin extends Plugin {
 
 		this.registerEvent(
 			this.app.workspace.on("active-leaf-change", (leaf) => {
-				if (leaf.view instanceof MarkdownView) {
+				if (leaf?.view instanceof MarkdownView) {
 					setActiveMdFile(leaf.view.file);
 				}
 			})
@@ -157,7 +157,7 @@ export default class NoteSharingPlugin extends Plugin {
 
 				if (
 					(checking && !this.cache.has(activeView.file.path)) ||
-					this.cache.get(activeView.file.path).deleted_from_server
+					this.cache.get(activeView.file.path)?.deleted_from_server
 				) {
 					return false;
 				}
@@ -207,7 +207,7 @@ export default class NoteSharingPlugin extends Plugin {
 				// NOTE: this is an async call, but we don't need to wait for it
 				this.cache.set(file.path, {
 					shared_datetime: moment().toISOString(),
-					updated_datetime: null,
+					updated_datetime: null as unknown as string,
 					expire_datetime: res.expire_time.toISOString(),
 					view_url: res.view_url,
 					secret_token: res.secret_token,
