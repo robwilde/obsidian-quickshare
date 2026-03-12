@@ -39,7 +39,7 @@ esbuild
 		bundle: true,
 		plugins: [
 			esbuildSvelte({
-				compilerOptions: { css: true },
+				compilerOptions: { css: "injected" },
 				preprocess: sveltePreprocess(),
 			}),
 			eslint(),
@@ -72,7 +72,7 @@ esbuild
 		],
 		format: "cjs",
 		watch: !prod,
-		target: "es2016",
+		target: "es2018",
 		logLevel: "info",
 		sourcemap: prod ? false : "inline",
 		treeShaking: true,
