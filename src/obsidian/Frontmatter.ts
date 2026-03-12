@@ -11,9 +11,9 @@ function _getFrontmatterKey(
 	file: TFile,
 	key: FrontmatterKey,
 	app: App
-): string {
-	const fmCache = app.metadataCache.getFileCache(file).frontmatter;
-	return fmCache?.[keyTypetoFrontmatterKey[key]] || undefined;
+): string | undefined {
+	const fmCache = app.metadataCache.getFileCache(file)?.frontmatter;
+	return fmCache?.[keyTypetoFrontmatterKey[key]] ?? undefined;
 }
 
 function _setFrontmatterKey(
@@ -62,7 +62,7 @@ async function _setFrontmatterKeys(
 				key as FrontmatterKey,
 				value,
 				content
-			);
+			) ?? content;
 		}
 	}
 	await app.vault.modify(file, content);

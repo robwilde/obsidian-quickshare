@@ -22,16 +22,16 @@ import { QuickShareSideView } from "src/ui/QuickShareSideView";
 import { writable } from "svelte/store";
 import { setActiveMdFile } from "src/lib/stores/ActiveMdFile";
 
-const { subscribe, set: setPluginStore } = writable<NoteSharingPlugin>(null);
+const { subscribe, set: setPluginStore } = writable<NoteSharingPlugin | null>(null);
 
 export const PluginStore = { subscribe };
 
 export default class NoteSharingPlugin extends Plugin {
-	public settings: PluginSettings;
-	private noteSharingService: NoteSharingService;
-	private cache: QuickShareCache;
+	public settings!: PluginSettings;
+	private noteSharingService!: NoteSharingService;
+	private cache!: QuickShareCache;
 
-	private fileMenuEvent: EventRef;
+	private fileMenuEvent!: EventRef;
 
 	async onload() {
 		setPluginStore(this);
@@ -85,7 +85,7 @@ export default class NoteSharingPlugin extends Plugin {
 
 		this.registerEvent(
 			this.app.workspace.on("active-leaf-change", (leaf) => {
-				if (leaf.view instanceof MarkdownView) {
+				if (leaf?.view instanceof MarkdownView) {
 					setActiveMdFile(leaf.view.file);
 				}
 			})
@@ -142,7 +142,7 @@ export default class NoteSharingPlugin extends Plugin {
 					this.app.workspace.getActiveViewOfType(MarkdownView);
 				if (!activeView) return false;
 				if (checking) return true;
-				this.shareNote(activeView.file);
+				void this.shareNote(activeView.file);
 			},
 		});
 
@@ -157,14 +157,14 @@ export default class NoteSharingPlugin extends Plugin {
 
 				if (
 					(checking && !this.cache.has(activeView.file.path)) ||
-					this.cache.get(activeView.file.path).deleted_from_server
+					this.cache.get(activeView.file.path)?.deleted_from_server
 				) {
 					return false;
 				}
 				if (checking) {
 					return true;
 				}
-				this.deleteNote(activeView.file.path);
+				void this.deleteNote(activeView.file.path);
 			},
 		});
 	}
@@ -175,8 +175,8 @@ export default class NoteSharingPlugin extends Plugin {
 			menu.addItem((item) => {
 				item.setIcon("paper-plane-glyph");
 				item.setTitle("Create share link");
-				item.onClick(async (evt) => {
-					this.shareNote(file);
+				item.onClick(async () => {
+					await this.shareNote(file);
 				});
 			});
 		}

@@ -11,8 +11,12 @@
 	import { onMount } from "svelte";
 	import ActiveCacheFile from "src/lib/stores/ActiveCacheFile";
 
-	let data: QuickShareDataList;
-	let filteredData: QuickShareDataList;
+	let data: QuickShareDataList = $state($CacheStore);
+	let filteredData: QuickShareDataList = $derived(
+		data?.filter(
+			(d) => !deletedFromServer(d) && !(deletedFromVault(d) && hasExpired(d))
+		)
+	);
 
 	function hasExpired(data: QuickShareData) {
 		const expiration = moment(data.expire_datetime);
@@ -86,13 +90,11 @@
 		$PluginStore.shareNote(file);
 	}
 
-	$: data = $CacheStore;
-	$: filteredData = data?.filter(
-		(d) => !deletedFromServer(d) && !(deletedFromVault(d) && hasExpired(d))
-	);
+	$effect(() => {
+		data = $CacheStore;
+	});
 
 	onMount(() => {
-		// Force a rerender every 30 seconds to update rendered timestamps
 		const timer = window.setInterval(() => {
 			data = [...$CacheStore];
 		}, 30_000);
@@ -129,7 +131,7 @@
 			</div>
 			<div class="content-right">
 				{#if !$ActiveCacheFile?.cache || !isShared($ActiveCacheFile?.cache)}
-					<button on:click={() => onShare($ActiveCacheFile.file)}
+					<button onclick={() => onShare($ActiveCacheFile.file)}
 						>Share</button
 					>
 				{:else}
@@ -137,13 +139,13 @@
 						<IconButton
 							icon="reset"
 							size="xs"
-							on:click={() => onShare($ActiveCacheFile.file)}
+							onclick={() => onShare($ActiveCacheFile.file)}
 							tooltip="Share again"
 						/>
 						<IconButton
 							icon="trash"
 							size="xs"
-							on:click={() =>
+							onclick={() =>
 								onUnshare($ActiveCacheFile?.cache.fileId)}
 							tooltip="Remove access"
 						/>
@@ -159,13 +161,13 @@
 		<div class="history-header">Recently shared</div>
 		<div class="history-list">
 			{#each filteredData as item}
-				<!-- svelte-ignore a11y-unknown-aria-attribute -->
+				<!-- svelte-ignore a11y_unknown_aria_attribute -->
 				<div
 					aria-label={!deletedFromVault(item)
 						? `Click to open note`
 						: undefined}
 					aria-label-position="left"
-					class="history-item 
+					class="history-item
 					{hasExpired(item) && 'history-item--expired'}
 					{deletedFromServer(item) && 'history-item--deleted-server'}
 					{deletedFromVault(item) && 'history-item--deleted-vault'}"
@@ -173,7 +175,7 @@
 					<div class="item-row">
 						<div
 							class="item-description"
-							on:click={() =>
+							onclick={() =>
 								!deletedFromVault(item) &&
 								onOpenNote(item.fileId)}
 						>
@@ -195,13 +197,13 @@
 								<IconButton
 									icon="open-elsewhere-glyph"
 									size="xs"
-									on:click={() => onOpen(item.view_url)}
+									onclick={() => onOpen(item.view_url)}
 									tooltip="Open in browser"
 								/>
 								<IconButton
 									icon="trash"
 									size="xs"
-									on:click={() => onUnshare(item.fileId)}
+									onclick={() => onUnshare(item.fileId)}
 									tooltip="Remove access"
 								/>
 							</div>
@@ -240,7 +242,6 @@
 				color: var(--text-faint);
 				font-size: 85%;
 				word-break: break-all;
-				// should only be one line, use ellipsis if it overflows
 				display: inline-block;
 				overflow: hidden;
 				text-overflow: ellipsis;

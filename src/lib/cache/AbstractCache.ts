@@ -2,7 +2,7 @@ import { updateReactiveCache } from "../stores/CacheStore";
 
 export type QuickShareData = {
 	shared_datetime: string;
-	updated_datetime: string;
+	updated_datetime: string | null;
 	expire_datetime: string;
 	view_url: string;
 	secret_token: string;
@@ -43,7 +43,7 @@ export abstract class AbstractCache implements QuickShareCache {
 		fileId: FileId,
 		data: QuickShareData | Setter
 	): Promise<void> {
-		const cache = await this._getCache();
+		const cache = this._getCache();
 		if (typeof data === "function") {
 			if (cache[fileId] === undefined) {
 				throw new Error("File not found in cache.");
@@ -52,10 +52,10 @@ export abstract class AbstractCache implements QuickShareCache {
 		} else {
 			cache[fileId] = data;
 		}
-		this.writeCache(cache);
+		await this.writeCache(cache);
 	}
 
-	/** Check if file with id is in cache. */
+	/** Check if a file with id is in cache. */
 	public has(fileId: FileId): boolean {
 		const cache = this._getCache();
 		return cache[fileId] !== undefined;
@@ -88,7 +88,7 @@ export abstract class AbstractCache implements QuickShareCache {
 	/** Copies the contents of the passed cache to this cache. */
 	public async copy(cache: QuickShareCache): Promise<void> {
 		const data = await cache.$getCache();
-		this.writeCache(data);
+		await this.writeCache(data);
 	}
 
 	public async $getCache(): Promise<Record<FileId, QuickShareData>> {
