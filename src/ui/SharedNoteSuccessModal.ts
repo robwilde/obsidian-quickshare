@@ -5,9 +5,9 @@ import { mount, unmount } from "svelte";
 import Component from "./SharedNoteSuccessComponent.svelte";
 
 export class SharedNoteSuccessModal extends Modal {
-	private url: string;
-	private component!: Record<string, any>;
-	private expire_time: Moment;
+	private readonly url: string;
+	private component!: Parameters<typeof unmount>[0];
+	private readonly expire_time: Moment;
 
 	constructor(plugin: NoteSharingPlugin, url: string, expire_time: Moment) {
 		super(plugin.app);
@@ -31,6 +31,6 @@ export class SharedNoteSuccessModal extends Modal {
 	}
 
 	async onClose() {
-		unmount(this.component);
+		await unmount(this.component);
 	}
 }

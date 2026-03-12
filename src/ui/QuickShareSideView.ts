@@ -6,7 +6,7 @@ export class QuickShareSideView extends ItemView {
 
 	public navigation = false;
 
-	private component!: Record<string, any>;
+	private component!: Parameters<typeof unmount>[0];
 
 	constructor(leaf: WorkspaceLeaf) {
 		super(leaf);
@@ -21,7 +21,7 @@ export class QuickShareSideView extends ItemView {
 	}
 
 	async onClose() {
-		unmount(this.component);
+		await unmount(this.component);
 	}
 
 	/* View abstract method implementations */

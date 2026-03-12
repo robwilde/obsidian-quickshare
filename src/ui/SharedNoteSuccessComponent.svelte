@@ -35,7 +35,7 @@
 		>
 		<button
 			class="url-button"
-			aria-label="Copy link to clipboard"
+			aria-label="Open link in browser"
 			onclick={onOpen}>Open</button
 		>
 	</div>
@@ -70,7 +70,7 @@
 	}
 
 	.url-button {
-		margin: 0px;
+		margin: 0;
 		width: 5em;
 	}
 
