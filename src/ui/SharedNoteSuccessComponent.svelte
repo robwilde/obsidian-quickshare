@@ -1,10 +1,9 @@
 <script lang="ts">
 	import moment, { type Moment } from "moment";
 
-	export let url: string;
-	export let expireTime: Moment;
+	let { url, expireTime }: { url: string; expireTime: Moment } = $props();
 
-	let buttonText = "Copy";
+	let buttonText = $state("Copy");
 	let buttonTextTimeout: string | number | NodeJS.Timeout;
 
 	function onCopy() {
@@ -32,12 +31,12 @@
 		<button
 			class="url-button"
 			aria-label="Copy link to clipboard"
-			on:click={onCopy}>{buttonText}</button
+			onclick={onCopy}>{buttonText}</button
 		>
 		<button
 			class="url-button"
 			aria-label="Copy link to clipboard"
-			on:click={onOpen}>Open</button
+			onclick={onOpen}>Open</button
 		>
 	</div>
 	<p id="subtext">
@@ -49,7 +48,7 @@
 	</p>
 </div>
 
-<style scoped>
+<style>
 	.share-plugin-modal-container {
 		max-width: 560px;
 	}

@@ -1,26 +1,12 @@
 <script lang="ts">
 	import { useIcon } from ".";
 
-	/**
-	 * Specifies the icon identifier. Visit https://lucide.dev for all valid
-	 * identifiers.
-	 */
-	export let name: string;
-
-	/**
-	 * Specifies the icon size.
-	 */
-	export let size: "xs" | "sm" | "md" | "lg" = "md";
-
-	/**
-	 * Specifies whether to invert the icon color on accent backgrounds.
-	 */
-	export let accent: boolean = false;
-
-	/**
-	 * Specifies the tooltip text.
-	 */
-	export let tooltip: string = "";
+	let { name, size = "md", accent = false, tooltip = "" }: {
+		name: string;
+		size?: "xs" | "sm" | "md" | "lg";
+		accent?: boolean;
+		tooltip?: string;
+	} = $props();
 </script>
 
 <span
@@ -31,7 +17,7 @@
 	class:icon-lg={size === "lg"}
 	aria-label={tooltip}
 	use:useIcon={name}
-/>
+></span>
 
 <style>
 	span {
