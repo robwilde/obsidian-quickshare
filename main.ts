@@ -142,7 +142,7 @@ export default class NoteSharingPlugin extends Plugin {
 					this.app.workspace.getActiveViewOfType(MarkdownView);
 				if (!activeView) return false;
 				if (checking) return true;
-				this.shareNote(activeView.file);
+				void this.shareNote(activeView.file);
 			},
 		});
 
@@ -164,7 +164,7 @@ export default class NoteSharingPlugin extends Plugin {
 				if (checking) {
 					return true;
 				}
-				this.deleteNote(activeView.file.path);
+				void this.deleteNote(activeView.file.path);
 			},
 		});
 	}
@@ -175,8 +175,8 @@ export default class NoteSharingPlugin extends Plugin {
 			menu.addItem((item) => {
 				item.setIcon("paper-plane-glyph");
 				item.setTitle("Create share link");
-				item.onClick(async (evt) => {
-					this.shareNote(file);
+				item.onClick(async () => {
+					await this.shareNote(file);
 				});
 			});
 		}
@@ -207,7 +207,7 @@ export default class NoteSharingPlugin extends Plugin {
 				// NOTE: this is an async call, but we don't need to wait for it
 				this.cache.set(file.path, {
 					shared_datetime: moment().toISOString(),
-					updated_datetime: null as unknown as string,
+					updated_datetime: null,
 					expire_datetime: res.expire_time.toISOString(),
 					view_url: res.view_url,
 					secret_token: res.secret_token,

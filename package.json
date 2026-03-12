@@ -16,7 +16,7 @@
 	"license": "MIT",
 	"devDependencies": {
 		"@tsconfig/svelte": "^5.0.0",
-		"@types/node": "^16.11.6",
+		"@types/node": "^20.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.2.0",
 		"@typescript-eslint/parser": "^5.2.0",
 		"builtin-modules": "^3.2.0",
